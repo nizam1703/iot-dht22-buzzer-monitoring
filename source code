@@ -1,0 +1,78 @@
+#define BLYNK_TEMPLATE_ID "TMPL6jzrKxHMX"
+#define BLYNK_TEMPLATE_NAME "TA DHT22 Buzzer ESP8266"
+#define BLYNK_AUTH_TOKEN "ISI_AUTH_TOKEN_BLYNK"
+
+#define BLYNK_PRINT Serial
+
+#include <ESP8266WiFi.h>
+#include <BlynkSimpleEsp8266.h>
+#include <DHT.h>
+
+char ssid[] = "Wokwi-GUEST";
+char pass[] = "";
+
+#define DHT_PIN D4
+#define BUZZER_PIN D5
+
+#define DHT_TYPE DHT22
+
+#define BATAS_SUHU 30
+
+DHT dht(DHT_PIN, DHT_TYPE);
+BlynkTimer timer;
+
+float suhu;
+float kelembapan;
+int statusBuzzer;
+
+void bacaSensorDHT() {
+  suhu = dht.readTemperature();
+  kelembapan = dht.readHumidity();
+
+  if (isnan(suhu) || isnan(kelembapan)) {
+    Serial.println("Gagal membaca sensor DHT22!");
+    return;
+  }
+
+  if (suhu >= BATAS_SUHU) {
+    digitalWrite(BUZZER_PIN, HIGH);
+    statusBuzzer = 1;
+    Serial.print("Status: Suhu Tinggi");
+  } 
+  else {
+    digitalWrite(BUZZER_PIN, LOW);
+    statusBuzzer = 0;
+    Serial.print("Status: Suhu Normal");
+  }
+
+  Blynk.virtualWrite(V0, suhu);
+  Blynk.virtualWrite(V1, kelembapan);
+  Blynk.virtualWrite(V2, statusBuzzer);
+
+  Serial.print(" | Suhu: ");
+  Serial.print(suhu);
+  Serial.print(" °C");
+  Serial.print(" | Kelembapan: ");
+  Serial.print(kelembapan);
+  Serial.print(" %");
+  Serial.print(" | Buzzer: ");
+  Serial.println(statusBuzzer == 1 ? "ON" : "OFF");
+}
+
+void setup() {
+  Serial.begin(115200);
+
+  pinMode(BUZZER_PIN, OUTPUT);
+  digitalWrite(BUZZER_PIN, LOW);
+
+  dht.begin();
+
+  Blynk.begin(BLYNK_AUTH_TOKEN, ssid, pass);
+
+  timer.setInterval(1000L, bacaSensorDHT);
+}
+
+void loop() {
+  Blynk.run();
+  timer.run();
+}
