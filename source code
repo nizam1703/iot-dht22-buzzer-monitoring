@@ -1,6 +1,6 @@
-#define BLYNK_TEMPLATE_ID "TMPL6jzrKxHMX"
-#define BLYNK_TEMPLATE_NAME "TA DHT22 Buzzer ESP8266"
-#define BLYNK_AUTH_TOKEN "ISI_AUTH_TOKEN_BLYNK"
+#define BLYNK_TEMPLATE_ID "ISI TEMPLATE ID"
+#define BLYNK_TEMPLATE_NAME "ISI TEMPLATE NAMA"
+#define BLYNK_AUTH_TOKEN "ISI AUTH TOKEN BLYNK"
 
 #define BLYNK_PRINT Serial
 
@@ -8,8 +8,8 @@
 #include <BlynkSimpleEsp8266.h>
 #include <DHT.h>
 
-char ssid[] = "Wokwi-GUEST";
-char pass[] = "";
+char ssid[] = "ISI NAMA WIFI";
+char pass[] = "ISI PASSWORD WIFI";
 
 #define DHT_PIN D4
 #define BUZZER_PIN D5
